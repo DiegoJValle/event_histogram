@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650">
+<style>text{font-family:Arial,Helvetica,sans-serif}.axis{stroke:#222;stroke-width:1.5}.grid{stroke:#ddd;stroke-width:1}.bar{stroke:#222;stroke-width:.5}</style>
+<rect width="1200" height="650" fill="white"/>
+<text x="600.0" y="35" text-anchor="middle" font-size="24">DAS event histogram - 2025-05</text>
+<line class="axis" x1="90" y1="560" x2="980" y2="560"/>
+<line class="axis" x1="90" y1="70" x2="90" y2="560"/>
+<line class="grid" x1="90" y1="560.00" x2="980" y2="560.00"/>
+<text x="80" y="565.00" text-anchor="end" font-size="14">0</text>
+<line class="grid" x1="90" y1="461.76" x2="980" y2="461.76"/>
+<text x="80" y="466.76" text-anchor="end" font-size="14">81</text>
+<line class="grid" x1="90" y1="363.51" x2="980" y2="363.51"/>
+<text x="80" y="368.51" text-anchor="end" font-size="14">162</text>
+<line class="grid" x1="90" y1="265.27" x2="980" y2="265.27"/>
+<text x="80" y="270.27" text-anchor="end" font-size="14">243</text>
+<line class="grid" x1="90" y1="167.03" x2="980" y2="167.03"/>
+<text x="80" y="172.03" text-anchor="end" font-size="14">324</text>
+<line class="axis" x1="90.00" y1="560" x2="90.00" y2="566"/>
+<text x="90.00" y="585" text-anchor="middle" font-size="12">0</text>
+<line class="axis" x1="179.00" y1="560" x2="179.00" y2="566"/>
+<text x="179.00" y="585" text-anchor="middle" font-size="12">5</text>
+<line class="axis" x1="268.00" y1="560" x2="268.00" y2="566"/>
+<text x="268.00" y="585" text-anchor="middle" font-size="12">10</text>
+<line class="axis" x1="357.00" y1="560" x2="357.00" y2="566"/>
+<text x="357.00" y="585" text-anchor="middle" font-size="12">15</text>
+<line class="axis" x1="446.00" y1="560" x2="446.00" y2="566"/>
+<text x="446.00" y="585" text-anchor="middle" font-size="12">20</text>
+<line class="axis" x1="535.00" y1="560" x2="535.00" y2="566"/>
+<text x="535.00" y="585" text-anchor="middle" font-size="12">25</text>
+<line class="axis" x1="624.00" y1="560" x2="624.00" y2="566"/>
+<text x="624.00" y="585" text-anchor="middle" font-size="12">30</text>
+<line class="axis" x1="713.00" y1="560" x2="713.00" y2="566"/>
+<text x="713.00" y="585" text-anchor="middle" font-size="12">35</text>
+<line class="axis" x1="802.00" y1="560" x2="802.00" y2="566"/>
+<text x="802.00" y="585" text-anchor="middle" font-size="12">40</text>
+<line class="axis" x1="891.00" y1="560" x2="891.00" y2="566"/>
+<text x="891.00" y="585" text-anchor="middle" font-size="12">45</text>
+<line class="axis" x1="980.00" y1="560" x2="980.00" y2="566"/>
+<text x="980.00" y="585" text-anchor="middle" font-size="12">50</text>
+<rect class="bar" x="90.00" y="70.00" width="89.00" height="490.00" fill="#ff7f0e"><title>noise: 404</title></rect>
+<rect class="bar" x="179.00" y="70.00" width="89.00" height="490.00" fill="#ff7f0e"><title>noise: 404</title></rect>
+<rect class="bar" x="268.00" y="70.00" width="89.00" height="490.00" fill="#ff7f0e"><title>noise: 404</title></rect>
+<rect class="bar" x="357.00" y="532.10" width="89.00" height="27.90" fill="#7f7f7f"><title>other: 23</title></rect>
+<rect class="bar" x="357.00" y="77.28" width="89.00" height="454.83" fill="#ff7f0e"><title>noise: 375</title></rect>
+<rect class="bar" x="357.00" y="72.43" width="89.00" height="4.85" fill="#1f77b4"><title>vessel: 4</title></rect>
+<rect class="bar" x="357.00" y="70.00" width="89.00" height="2.43" fill="#2ca02c"><title>seismic: 2</title></rect>
+<rect class="bar" x="446.00" y="536.96" width="89.00" height="23.04" fill="#7f7f7f"><title>other: 19</title></rect>
+<rect class="bar" x="446.00" y="84.55" width="89.00" height="452.40" fill="#ff7f0e"><title>noise: 373</title></rect>
+<rect class="bar" x="446.00" y="70.00" width="89.00" height="14.55" fill="#1f77b4"><title>vessel: 12</title></rect>
+<rect class="bar" x="535.00" y="558.79" width="89.00" height="1.21" fill="#7f7f7f"><title>other: 1</title></rect>
+<rect class="bar" x="535.00" y="72.43" width="89.00" height="486.36" fill="#ff7f0e"><title>noise: 401</title></rect>
+<rect class="bar" x="535.00" y="70.00" width="89.00" height="2.43" fill="#1f77b4"><title>vessel: 2</title></rect>
+<rect class="bar" x="624.00" y="70.00" width="89.00" height="490.00" fill="#ff7f0e"><title>noise: 404</title></rect>
+<rect class="bar" x="713.00" y="71.21" width="89.00" height="488.79" fill="#ff7f0e"><title>noise: 403</title></rect>
+<rect class="bar" x="713.00" y="70.00" width="89.00" height="1.21" fill="#1f77b4"><title>vessel: 1</title></rect>
+<rect class="bar" x="802.00" y="556.36" width="89.00" height="3.64" fill="#7f7f7f"><title>other: 3</title></rect>
+<rect class="bar" x="802.00" y="72.43" width="89.00" height="483.94" fill="#ff7f0e"><title>noise: 399</title></rect>
+<rect class="bar" x="802.00" y="70.00" width="89.00" height="2.43" fill="#1f77b4"><title>vessel: 2</title></rect>
+<rect class="bar" x="891.00" y="70.00" width="89.00" height="490.00" fill="#ff7f0e"><title>noise: 404</title></rect>
+<text x="535.0" y="625" text-anchor="middle" font-size="16">Length along fiber (km)</text>
+<text x="25" y="315.0" text-anchor="middle" font-size="16" transform="rotate(-90 25 315.0)">Number of events recorded</text>
+<text x="1025" y="75" font-size="16" font-weight="bold">Event class</text>
+<rect x="1025" y="90" width="18" height="18" fill="#7f7f7f" stroke="#222"/>
+<text x="1053" y="104" font-size="15">other</text>
+<rect x="1025" y="118" width="18" height="18" fill="#ff7f0e" stroke="#222"/>
+<text x="1053" y="132" font-size="15">noise</text>
+<rect x="1025" y="146" width="18" height="18" fill="#1f77b4" stroke="#222"/>
+<text x="1053" y="160" font-size="15">vessel</text>
+<rect x="1025" y="174" width="18" height="18" fill="#2ca02c" stroke="#222"/>
+<text x="1053" y="188" font-size="15">seismic</text>
+</svg>

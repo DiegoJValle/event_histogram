@@ -27,6 +27,8 @@ LABEL_COLORS = {
     "vessel": "#1f77b4",
     "seismic": "#2ca02c",
 }
+BAR_ALPHA = 0.55
+CURVE_POINTS_PER_BIN = 12
 
 
 @dataclass(frozen=True)
@@ -169,6 +171,37 @@ def aggregate(events: list[Event], edges: list[float]) -> dict[str, list[Counter
     return dict(monthly)
 
 
+def bin_centers(edges: list[float]) -> list[float]:
+    return [(edges[i] + edges[i + 1]) / 2 for i in range(len(edges) - 1)]
+
+
+def smooth_distribution(counts: list[int], edges: list[float]) -> list[tuple[float, float]]:
+    """Build a smooth count-scaled distribution curve for the histogram bars."""
+    centers = bin_centers(edges)
+    if not centers:
+        return []
+
+    bin_width = edges[1] - edges[0]
+    sigma = max(bin_width * 0.75, 0.001)
+    start = edges[0]
+    stop = edges[-1]
+    point_count = max(2, (len(edges) - 1) * CURVE_POINTS_PER_BIN + 1)
+    step = (stop - start) / (point_count - 1)
+    curve: list[tuple[float, float]] = []
+
+    for point_index in range(point_count):
+        x = start + point_index * step
+        weighted_sum = 0.0
+        weight_total = 0.0
+        for center, count in zip(centers, counts):
+            weight = math.exp(-0.5 * ((x - center) / sigma) ** 2)
+            weighted_sum += count * weight
+            weight_total += weight
+        y = weighted_sum / weight_total if weight_total else 0.0
+        curve.append((x, y))
+    return curve
+
+
 def create_figures(monthly_counts: dict[str, list[Counter[str]]], edges: list[float], output_dir: Path, dpi: int, fmt: str) -> list[Path]:
     if fmt == "svg":
         return create_svg_figures(monthly_counts, edges, output_dir)
@@ -183,27 +216,33 @@ def create_figures(monthly_counts: dict[str, list[Counter[str]]], edges: list[fl
 
     output_dir.mkdir(parents=True, exist_ok=True)
     figure_paths: list[Path] = []
-    widths = [edges[i + 1] - edges[i] for i in range(len(edges) - 1)]
-    lefts = edges[:-1]
+    width = (edges[1] - edges[0]) * 0.82
+    centers = bin_centers(edges)
 
     for month in sorted(monthly_counts):
         fig, ax = plt.subplots(figsize=(12, 6))
-        bottoms = [0] * (len(edges) - 1)
         for label in LABELS:
             heights = [monthly_counts[month][i][label] for i in range(len(edges) - 1)]
             ax.bar(
-                lefts,
+                centers,
                 heights,
-                width=widths,
-                bottom=bottoms,
-                align="edge",
+                width=width,
+                align="center",
                 label=label,
                 color=LABEL_COLORS[label],
+                alpha=BAR_ALPHA,
                 edgecolor="black",
-                linewidth=0.4,
+                linewidth=0.7,
             )
-            bottoms = [bottoms[i] + heights[i] for i in range(len(heights))]
-        ax.set_title(f"DAS event histogram - {month}")
+            curve = smooth_distribution(heights, edges)
+            if curve:
+                ax.plot(
+                    [point[0] for point in curve],
+                    [point[1] for point in curve],
+                    color=LABEL_COLORS[label],
+                    linewidth=2.2,
+                )
+        ax.set_title(f"Overlapped DAS event histogram with distribution curves - {month}")
         ax.set_xlabel("Length along fiber (km)")
         ax.set_ylabel("Number of events recorded")
         ax.set_xlim(edges[0], edges[-1])
@@ -219,23 +258,25 @@ def create_figures(monthly_counts: dict[str, list[Counter[str]]], edges: list[fl
 
 
 def create_svg_figures(monthly_counts: dict[str, list[Counter[str]]], edges: list[float], output_dir: Path) -> list[Path]:
-    """Write dependency-free stacked histogram SVG files."""
+    """Write dependency-free overlapped histogram SVG files with distribution curves."""
     output_dir.mkdir(parents=True, exist_ok=True)
     figure_paths: list[Path] = []
     width, height = 1200, 650
     margin_left, margin_right, margin_top, margin_bottom = 90, 220, 70, 90
     plot_width = width - margin_left - margin_right
     plot_height = height - margin_top - margin_bottom
+    centers = bin_centers(edges)
+    bar_width_km = (edges[1] - edges[0]) * 0.82
 
     for month in sorted(monthly_counts):
-        max_total = max((sum(counter.values()) for counter in monthly_counts[month]), default=0) or 1
+        max_total = max((counter[label] for counter in monthly_counts[month] for label in LABELS), default=0) or 1
         x_scale = plot_width / (edges[-1] - edges[0])
         y_scale = plot_height / max_total
         parts = [
             f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
-            "<style>text{font-family:Arial,Helvetica,sans-serif}.axis{stroke:#222;stroke-width:1.5}.grid{stroke:#ddd;stroke-width:1}.bar{stroke:#222;stroke-width:.5}</style>",
+            "<style>text{font-family:Arial,Helvetica,sans-serif}.axis{stroke:#222;stroke-width:1.5}.grid{stroke:#ddd;stroke-width:1}.bar{stroke:#222;stroke-width:.8}.curve{fill:none;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}</style>",
             f'<rect width="{width}" height="{height}" fill="white"/>',
-            f'<text x="{width / 2}" y="35" text-anchor="middle" font-size="24">DAS event histogram - {month}</text>',
+            f'<text x="{width / 2}" y="35" text-anchor="middle" font-size="24">Overlapped DAS event histogram with distribution curves - {month}</text>',
         ]
         # Axes and grid.
         x0, y0 = margin_left, margin_top + plot_height
@@ -250,21 +291,34 @@ def create_svg_figures(monthly_counts: dict[str, list[Counter[str]]], edges: lis
             parts.append(f'<line class="axis" x1="{x:.2f}" y1="{y0}" x2="{x:.2f}" y2="{y0 + 6}"/>')
             parts.append(f'<text x="{x:.2f}" y="{y0 + 25}" text-anchor="middle" font-size="12">{edge:g}</text>')
 
-        # Stacked bars.
-        for idx, counter in enumerate(monthly_counts[month]):
-            x = x0 + (edges[idx] - edges[0]) * x_scale
-            bar_width = (edges[idx + 1] - edges[idx]) * x_scale
-            bottom = y0
-            for label in LABELS:
+        # Overlapped bars, one transparent histogram per event class.
+        bar_width = bar_width_km * x_scale
+        for label in LABELS:
+            for idx, counter in enumerate(monthly_counts[month]):
                 value = counter[label]
                 bar_height = value * y_scale
                 if value:
-                    y = bottom - bar_height
+                    x = x0 + (centers[idx] - edges[0]) * x_scale - bar_width / 2
+                    y = y0 - bar_height
                     parts.append(
                         f'<rect class="bar" x="{x:.2f}" y="{y:.2f}" width="{bar_width:.2f}" '
-                        f'height="{bar_height:.2f}" fill="{LABEL_COLORS[label]}"><title>{label}: {value}</title></rect>'
+                        f'height="{bar_height:.2f}" fill="{LABEL_COLORS[label]}" fill-opacity="{BAR_ALPHA}">'
+                        f'<title>{label}: {value}</title></rect>'
                     )
-                    bottom = y
+
+            # Count-scaled smooth distribution curve over the matching bars.
+            curve = smooth_distribution([counter[label] for counter in monthly_counts[month]], edges)
+            if curve:
+                path_points = []
+                for point_index, (x_value, y_value) in enumerate(curve):
+                    x = x0 + (x_value - edges[0]) * x_scale
+                    y = y0 - y_value * y_scale
+                    command = "M" if point_index == 0 else "L"
+                    path_points.append(f"{command}{x:.2f},{y:.2f}")
+                parts.append(
+                    f'<path class="curve" d="{" ".join(path_points)}" stroke="{LABEL_COLORS[label]}">'
+                    f'<title>{label} smoothed distribution</title></path>'
+                )
 
         parts.append(f'<text x="{x0 + plot_width / 2}" y="{height - 25}" text-anchor="middle" font-size="16">Length along fiber (km)</text>')
         parts.append(f'<text x="25" y="{margin_top + plot_height / 2}" text-anchor="middle" font-size="16" transform="rotate(-90 25 {margin_top + plot_height / 2})">Number of events recorded</text>')
@@ -272,7 +326,7 @@ def create_svg_figures(monthly_counts: dict[str, list[Counter[str]]], edges: lis
         parts.append(f'<text x="{legend_x}" y="{legend_y - 15}" font-size="16" font-weight="bold">Event class</text>')
         for offset, label in enumerate(LABELS):
             y = legend_y + offset * 28
-            parts.append(f'<rect x="{legend_x}" y="{y}" width="18" height="18" fill="{LABEL_COLORS[label]}" stroke="#222"/>')
+            parts.append(f'<rect x="{legend_x}" y="{y}" width="18" height="18" fill="{LABEL_COLORS[label]}" fill-opacity="{BAR_ALPHA}" stroke="#222"/>')
             parts.append(f'<text x="{legend_x + 28}" y="{y + 14}" font-size="15">{label}</text>')
         parts.append("</svg>")
 

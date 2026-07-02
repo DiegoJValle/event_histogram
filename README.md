@@ -22,4 +22,4 @@ Options:
 - `--log-file`: metrics report path.
 - `--format`: figure format (`png`, `pdf`, or `svg`).
 
-Each figure is a stacked histogram with the legend classes `other`, `noise`, `vessel`, and `seismic`. The X axis is fiber length in kilometers, and the Y axis is the number of events recorded.
+Each figure is an overlapped histogram with transparent bars for the legend classes `other`, `noise`, `vessel`, and `seismic`, plus a smooth distribution curve for each class. The X axis is fiber length in kilometers, and the Y axis is the number of events recorded.

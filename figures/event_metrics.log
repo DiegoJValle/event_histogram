@@ -1,36 +1,42 @@
-DAS Event Histogram Metrics
-===========================
+Fiber Range Vessel Relevance Metrics
+====================================
 
-Total events counted: 43320
+Purpose: identify the fiber chunks with the most vessel annotations.
+Noise annotations are excluded from event-ranking totals.
+
+Total annotations counted: 43320
+Total vessel annotations: 191
 Months processed: 10
 Fiber range: 0-50 km
 Chunk spacing: 5 km
 
-Months ordered by vessel events
--------------------------------
-2025-01: vessels=47, total=4960, noise=4811, seismic=29, other=73
-2025-04: vessels=37, total=4800, noise=4669, seismic=28, other=66
-2024-12: vessels=28, total=4960, noise=4873, seismic=6, other=53
-2025-03: vessels=24, total=4960, noise=4884, seismic=5, other=47
-2025-05: vessels=21, total=4040, noise=3971, seismic=2, other=46
-2025-02: vessels=16, total=4480, noise=4368, seismic=57, other=39
-2024-11: vessels=8, total=4800, noise=4757, seismic=5, other=30
-2024-09: vessels=7, total=2880, noise=2860, seismic=1, other=12
-2024-10: vessels=2, total=4960, noise=4882, seismic=29, other=47
-2025-06: vessels=1, total=2480, noise=2474, seismic=0, other=5
+Fiber chunks by vessel annotations
+-----------------------------------
+| Fiber chunk | Vessel annotations | % of vessels |
+| ----------- | -----------------: | -----------: |
+| 15-20 km |                 62 |       32.5% |
+| 20-25 km |                 57 |       29.8% |
+| 25-30 km |                 27 |       14.1% |
+| 35-40 km |                 14 |        7.3% |
+| 30-35 km |                 12 |        6.3% |
+| 40-45 km |                 12 |        6.3% |
+| 10-15 km |                  6 |        3.1% |
+| 45-50 km |                  1 |        0.5% |
+| 0-5 km |                  0 |        0.0% |
+| 5-10 km |                  0 |        0.0% |
 
-Fiber chunks with most events recorded
---------------------------------------
-0-5 km: 4332
-5-10 km: 4332
-10-15 km: 4332
-15-20 km: 4332
-20-25 km: 4332
-25-30 km: 4332
-30-35 km: 4332
-35-40 km: 4332
-40-45 km: 4332
-45-50 km: 4332
+Fiber chunks with most events recorded (excluding noise)
+-------------------------------------------------------
+15-20 km: 305
+20-25 km: 258
+25-30 km: 55
+35-40 km: 51
+40-45 km: 32
+30-35 km: 27
+0-5 km: 16
+45-50 km: 12
+10-15 km: 11
+5-10 km: 4
 
 Monthly label distribution
 --------------------------
@@ -44,66 +50,3 @@ Monthly label distribution
 2025-04: other=66, noise=4669, vessel=37, seismic=28
 2025-05: other=46, noise=3971, vessel=21, seismic=2
 2025-06: other=5, noise=2474, vessel=1, seismic=0
-
-Top chunks per month
---------------------
-2024-09:
-  5-10 km: total=288, other=0, noise=288, vessel=0, seismic=0
-  45-50 km: total=288, other=0, noise=287, vessel=0, seismic=1
-  40-45 km: total=288, other=0, noise=288, vessel=0, seismic=0
-  35-40 km: total=288, other=0, noise=288, vessel=0, seismic=0
-  30-35 km: total=288, other=1, noise=287, vessel=0, seismic=0
-2024-10:
-  5-10 km: total=496, other=4, noise=492, vessel=0, seismic=0
-  45-50 km: total=496, other=0, noise=493, vessel=0, seismic=3
-  40-45 km: total=496, other=0, noise=496, vessel=0, seismic=0
-  35-40 km: total=496, other=1, noise=489, vessel=0, seismic=6
-  30-35 km: total=496, other=0, noise=496, vessel=0, seismic=0
-2024-11:
-  5-10 km: total=480, other=0, noise=480, vessel=0, seismic=0
-  45-50 km: total=480, other=0, noise=477, vessel=0, seismic=3
-  40-45 km: total=480, other=0, noise=478, vessel=0, seismic=2
-  35-40 km: total=480, other=0, noise=480, vessel=0, seismic=0
-  30-35 km: total=480, other=0, noise=480, vessel=0, seismic=0
-2024-12:
-  5-10 km: total=496, other=0, noise=496, vessel=0, seismic=0
-  45-50 km: total=496, other=0, noise=493, vessel=0, seismic=3
-  40-45 km: total=496, other=6, noise=488, vessel=1, seismic=1
-  35-40 km: total=496, other=3, noise=490, vessel=3, seismic=0
-  30-35 km: total=496, other=1, noise=493, vessel=2, seismic=0
-2025-01:
-  5-10 km: total=496, other=0, noise=496, vessel=0, seismic=0
-  45-50 km: total=496, other=0, noise=495, vessel=0, seismic=1
-  40-45 km: total=496, other=3, noise=493, vessel=0, seismic=0
-  35-40 km: total=496, other=5, noise=484, vessel=4, seismic=3
-  30-35 km: total=496, other=1, noise=489, vessel=3, seismic=3
-2025-02:
-  5-10 km: total=448, other=0, noise=448, vessel=0, seismic=0
-  45-50 km: total=448, other=0, noise=448, vessel=0, seismic=0
-  40-45 km: total=448, other=4, noise=442, vessel=1, seismic=1
-  35-40 km: total=448, other=1, noise=428, vessel=4, seismic=15
-  30-35 km: total=448, other=0, noise=441, vessel=1, seismic=6
-2025-03:
-  5-10 km: total=496, other=0, noise=496, vessel=0, seismic=0
-  45-50 km: total=496, other=0, noise=495, vessel=1, seismic=0
-  40-45 km: total=496, other=0, noise=493, vessel=3, seismic=0
-  35-40 km: total=496, other=1, noise=493, vessel=2, seismic=0
-  30-35 km: total=496, other=1, noise=490, vessel=5, seismic=0
-2025-04:
-  5-10 km: total=480, other=0, noise=480, vessel=0, seismic=0
-  45-50 km: total=480, other=0, noise=480, vessel=0, seismic=0
-  40-45 km: total=480, other=0, noise=475, vessel=5, seismic=0
-  35-40 km: total=480, other=2, noise=478, vessel=0, seismic=0
-  30-35 km: total=480, other=2, noise=477, vessel=1, seismic=0
-2025-05:
-  5-10 km: total=404, other=0, noise=404, vessel=0, seismic=0
-  45-50 km: total=404, other=0, noise=404, vessel=0, seismic=0
-  40-45 km: total=404, other=3, noise=399, vessel=2, seismic=0
-  35-40 km: total=404, other=0, noise=403, vessel=1, seismic=0
-  30-35 km: total=404, other=0, noise=404, vessel=0, seismic=0
-2025-06:
-  5-10 km: total=248, other=0, noise=248, vessel=0, seismic=0
-  45-50 km: total=248, other=0, noise=248, vessel=0, seismic=0
-  40-45 km: total=248, other=0, noise=248, vessel=0, seismic=0
-  35-40 km: total=248, other=0, noise=248, vessel=0, seismic=0
-  30-35 km: total=248, other=0, noise=248, vessel=0, seismic=0

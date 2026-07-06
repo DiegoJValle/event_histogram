@@ -336,35 +336,50 @@ def create_svg_figures(monthly_counts: dict[str, list[Counter[str]]], edges: lis
     return figure_paths
 
 
+def format_chunk_label(start_km: float, end_km: float) -> str:
+    return f"{start_km:g}-{end_km:g} km"
+
+
 def write_log(events: list[Event], monthly_counts: dict[str, list[Counter[str]]], edges: list[float], log_file: Path) -> None:
-    month_totals = {month: sum(sum(counter.values()) for counter in counters) for month, counters in monthly_counts.items()}
     month_labels = {month: Counter() for month in monthly_counts}
-    chunk_totals: Counter[str] = Counter()
+    vessel_chunk_totals: Counter[str] = Counter()
+    signal_chunk_totals: Counter[str] = Counter()
+
+    for counters in monthly_counts.values():
+        for idx, counter in enumerate(counters):
+            chunk = format_chunk_label(edges[idx], edges[idx + 1])
+            vessel_chunk_totals[chunk] += counter["vessel"]
+            signal_chunk_totals[chunk] += sum(counter[label] for label in LABELS if label != "noise")
 
     for month, counters in monthly_counts.items():
-        for idx, counter in enumerate(counters):
-            label = f"{edges[idx]:g}-{edges[idx + 1]:g} km"
-            chunk_total = sum(counter.values())
-            chunk_totals[label] += chunk_total
+        for counter in counters:
             month_labels[month].update(counter)
+
+    total_vessels = sum(vessel_chunk_totals.values())
 
     log_file.parent.mkdir(parents=True, exist_ok=True) if log_file.parent != Path("") else None
     with log_file.open("w", encoding="utf-8") as handle:
-        handle.write("DAS Event Histogram Metrics\n")
-        handle.write("===========================\n\n")
-        handle.write(f"Total events counted: {len(events)}\n")
+        handle.write("Fiber Range Vessel Relevance Metrics\n")
+        handle.write("====================================\n\n")
+        handle.write("Purpose: identify the fiber chunks with the most vessel annotations.\n")
+        handle.write("Noise annotations are excluded from event-ranking totals.\n\n")
+        handle.write(f"Total annotations counted: {len(events)}\n")
+        handle.write(f"Total vessel annotations: {total_vessels}\n")
         handle.write(f"Months processed: {len(monthly_counts)}\n")
         handle.write(f"Fiber range: 0-{edges[-1]:g} km\n")
         handle.write(f"Chunk spacing: {edges[1] - edges[0]:g} km\n\n")
 
-        handle.write("Months ordered by vessel events\n")
-        handle.write("-------------------------------\n")
-        for month, labels in sorted(month_labels.items(), key=lambda item: item[1]["vessel"], reverse=True):
-            handle.write(f"{month}: vessels={labels['vessel']}, total={month_totals[month]}, noise={labels['noise']}, seismic={labels['seismic']}, other={labels['other']}\n")
+        handle.write("Fiber chunks by vessel annotations\n")
+        handle.write("-----------------------------------\n")
+        handle.write("| Fiber chunk | Vessel annotations | % of vessels |\n")
+        handle.write("| ----------- | -----------------: | -----------: |\n")
+        for chunk, count in vessel_chunk_totals.most_common():
+            percentage = (count / total_vessels * 100) if total_vessels else 0.0
+            handle.write(f"| {chunk} | {count:18d} | {percentage:10.1f}% |\n")
 
-        handle.write("\nFiber chunks with most events recorded\n")
-        handle.write("--------------------------------------\n")
-        for chunk, count in chunk_totals.most_common():
+        handle.write("\nFiber chunks with most events recorded (excluding noise)\n")
+        handle.write("-------------------------------------------------------\n")
+        for chunk, count in signal_chunk_totals.most_common():
             handle.write(f"{chunk}: {count}\n")
 
         handle.write("\nMonthly label distribution\n")
@@ -372,16 +387,6 @@ def write_log(events: list[Event], monthly_counts: dict[str, list[Counter[str]]]
         for month in sorted(month_labels):
             labels = month_labels[month]
             handle.write(f"{month}: " + ", ".join(f"{label}={labels[label]}" for label in LABELS) + "\n")
-
-        handle.write("\nTop chunks per month\n")
-        handle.write("--------------------\n")
-        for month in sorted(monthly_counts):
-            ranked = []
-            for idx, counter in enumerate(monthly_counts[month]):
-                ranked.append((sum(counter.values()), f"{edges[idx]:g}-{edges[idx + 1]:g} km", counter))
-            handle.write(f"{month}:\n")
-            for total, chunk, counter in sorted(ranked, reverse=True)[:5]:
-                handle.write(f"  {chunk}: total={total}, " + ", ".join(f"{label}={counter[label]}" for label in LABELS) + "\n")
 
 
 def main() -> int:

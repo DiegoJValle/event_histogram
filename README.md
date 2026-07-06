@@ -23,3 +23,5 @@ Options:
 - `--format`: figure format (`png`, `pdf`, or `svg`).
 
 Each figure is an overlapped histogram with transparent bars for the legend classes `other`, `noise`, `vessel`, and `seismic`, plus a smooth distribution curve for each class. The X axis is fiber length in kilometers, and the Y axis is the number of events recorded.
+
+The metrics log is focused on finding the most relevant fiber ranges for vessel activity. It reports vessel annotations per fiber chunk, including each chunk's percentage of all vessel annotations, and ranks overall recorded events with `noise` excluded so repeated noise rows do not dominate every chunk.
